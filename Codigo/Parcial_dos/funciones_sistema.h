@@ -8,5 +8,6 @@ void seleccion_fichas(char* jugador1,char* jugador2);
 bool verificar_colocar_fichas(Class_board *tablerito, char color);
 void seleccion_casilla(int* filas, int* columnas, char jugador, Class_board *tablerito);
 void menu_principal();
+char ganador(Class_board *tablerito, char jugador1, char jugador2);
 
 #endif // FUNCIONES_SISTEMA_H

@@ -15,6 +15,7 @@ public:
     void atrapar_ficha_cambio(int fila, int columna, char color);
     void eliminar_O();
     char get_estado_casilla(int fila, int columna);
+    int contador_fichas(char color);
 
     ~Class_board();
 };

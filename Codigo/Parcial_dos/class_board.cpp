@@ -39,15 +39,16 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
     if (color == '*'){
         color2 = '-';
     }
-    else{
+    else if(color == '-'){
         color2 = '*';
     }
+
 
     for (int i = fila-1; i > -1; --i) {
         if ((board[i][columna].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila-1][columna].get_estado() == color2) and (board[i+1][columna].get_estado() == color2)){
             board[fila][columna].set_estado('O');
             atrapar_ficha_oponente = true;
-            cout<<"1. "<<fila<<"-"<<columna;
+
         }
     }
 
@@ -56,7 +57,7 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
         if ((board[i][columna].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna].get_estado() == color2) and (board[i-1][columna].get_estado() == color2)){
             board[fila][columna].set_estado('O');
             atrapar_ficha_oponente = true;
-            cout<<"2. "<<fila<<"-"<<columna;
+
         }
     }
 
@@ -65,7 +66,7 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
         if ((board[fila][i].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila][columna-1].get_estado() == color2) and (board[fila][i+1].get_estado() == color2)){
             board[fila][columna].set_estado('O');
             atrapar_ficha_oponente = true;
-            cout<<"3. "<<fila<<"-"<<columna;
+
         }
     }
     //mirar si se puede atrapar hacia la derecha
@@ -73,56 +74,51 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
         if ((board[fila][i].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila][columna+1].get_estado() == color2) and (board[fila][i-1].get_estado() == color2)){
             board[fila][columna].set_estado('O');
             atrapar_ficha_oponente = true;
-            cout<<"4. "<<fila<<"-"<<columna;
+
         }
     }
 
     //mirar diagonalmente superior izquierda si se puede atrapar una ficha del oponente
 
-    for (int i = fila-1; i > -1; --i) {
-        for (int j = columna-1; j > -1; --j) {
+    for (int i = fila-1, j = columna-1; i > -1; --i, --j) {
             if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila-1][columna-1].get_estado() == color2) and (board[i+1][j+1].get_estado() == color2)){
                 board[fila][columna].set_estado('O');
                 atrapar_ficha_oponente = true;
-                cout<<"5. "<<fila<<"-"<<columna;
-            }
-        }
 
+            }
     }
     //mirar diagonalmente superior derecha si se puede atrapar una ficha del oponente
 
-    for (int i = fila-1; i > -1; --i) {
-        for (int j = columna+1; j < 8; ++j) {
+    for (int i = fila-1, j = columna+1; i > -1; --i, ++j) {
+
             if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila-1][columna+1].get_estado() == color2) and (board[i+1][j-1].get_estado() == color2)){
                 board[fila][columna].set_estado('O');
                 atrapar_ficha_oponente = true;
-                cout<<"6. "<<fila<<"-"<<columna;
+
             }
-        }
+
 
     }
     //mirar diagonalmente inferior derecha si se puede atrapar una ficha del oponente
 
-    for (int i = fila+1; i < 8; ++i) {
-        for (int j = columna+1; j < 8; ++j) {
-            if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna+1].get_estado() == color2) and (board[i-1][j-1].get_estado() == color2)){
-                board[fila][columna].set_estado('O');
-                atrapar_ficha_oponente = true;
-                cout<<"7. "<<fila<<"-"<<columna;
-            }
+    for (int i = fila+1, j = columna+1; i < 8; ++i, ++j) {
+
+        if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna+1].get_estado() == color2) and (board[i-1][j-1].get_estado() == color2)){
+            board[fila][columna].set_estado('O');
+            atrapar_ficha_oponente = true;
+
         }
+
 
     }
     //mirar diagonalmente inferior izquierda si se puede atrapar una ficha del oponente
 
     for (int i = fila+1, j = columna-1; j > -1; ++i, --j) {
+        if ((board[i][j].get_estado() == color) and (board[i][j].get_estado() != ' ') and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna-1].get_estado() == color2) and (board[i-1][j+1].get_estado() == color2)){
+            board[fila][columna].set_estado('O');
+            atrapar_ficha_oponente = true;
+        }
 
-            cout<<i<<" "<<j<<endl;
-            if ((board[i][j].get_estado() == color) and (board[i][j].get_estado() != ' ') and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna-1].get_estado() == color2) and (board[i-1][j+1].get_estado() == color2)){
-                board[fila][columna].set_estado('O');
-                atrapar_ficha_oponente = true;
-                cout<<"8. "<<fila<<"-"<<columna<<endl;
-            }
 
 
     }
@@ -209,73 +205,62 @@ void Class_board::atrapar_ficha_cambio(int fila, int columna, char color){
     }
 
     //mirar diagonalmente superior izquierda si se puede atrapar una ficha del oponente
-
-    for (int i = fila-1; i > -1; --i) {
-        for (int j = columna-1; j > -1; --j) {
-            if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila-1][columna-1].get_estado() == color2) and (board[i+1][j+1].get_estado() == color2)){
-                board[fila][columna].set_estado('O');
-                for (int k = fila-1; k > i; --k) {
-                    for (int l = columna-1; l > j; --l) {
-                        board[k][l].set_estado(color);
-                    }
-
-                }
+    for (int i = fila-1, j = columna-1; i > -1; --i, --j) {
+        if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila-1][columna-1].get_estado() == color2) and (board[i+1][j+1].get_estado() == color2)){
+            board[fila][columna].set_estado(color);
+            for (int k = fila-1, l = columna-1; k > i; --k, --l) {
+                board[k][l].set_estado(color);
             }
         }
-
     }
+
     //mirar diagonalmente superior derecha si se puede atrapar una ficha del oponente
-
-    for (int i = fila-1; i > -1; --i) {
-        for (int j = columna+1; j < 8; ++j) {
-            if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila-1][columna+1].get_estado() == color2) and (board[i+1][j-1].get_estado() == color2)){
-                board[fila][columna].set_estado(color);
-                for (int k = fila-1; k > i; --k) {
-                    for (int l = columna+1; l < j; ++l) {
-                        board[k][l].set_estado(color);
-                    }
-
-                }
+    for (int i = fila-1, j = columna+1; i > -1; --i, ++j) {
+        if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila-1][columna+1].get_estado() == color2) and (board[i+1][j-1].get_estado() == color2)){
+            board[fila][columna].set_estado(color);
+            for (int k = fila-1, l = columna+1; k > i; --k, ++l) {
+                board[k][l].set_estado(color);
             }
         }
 
+
     }
+
     //mirar diagonalmente inferior derecha si se puede atrapar una ficha del oponente
-
-    for (int i = fila+1; i < 8; ++i) {
-        for (int j = columna+1; j < 8; ++j) {
-            if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna+1].get_estado() == color2) and (board[i-1][j-1].get_estado() == color2)){
-                board[fila][columna].set_estado('O');
-                for (int k = fila+1; k < i; ++k) {
-                    for (int l = columna+1; l < j; ++l) {
-                        board[k][l].set_estado(color);
-                    }
-                }
+    for (int i = fila+1, j = columna+1; i < 8; ++i, ++j) {
+        if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna+1].get_estado() == color2) and (board[i-1][j-1].get_estado() == color2)){
+            board[fila][columna].set_estado(color);
+            for (int k = fila+1, l = columna+1; k < i; ++k, ++l) {
+                board[k][l].set_estado(color);
             }
         }
-
     }
+
     //mirar diagonalmente inferior izquierda si se puede atrapar una ficha del oponente
-
-    for (int i = fila+1; i < 8; ++i) {
-        for (int j = columna-1; j > -1; --j) {
-            if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna-1].get_estado() == color2) and (board[i-1][j+1].get_estado() == color2)){
-                board[fila][columna].set_estado('O');
-                for (int k = fila+1; k < i; ++k) {
-                    for (int l = columna-1; l > j; --l) {
-                        board[k][l].set_estado(color);
-                    }
-
-                }
+    for (int i = fila+1, j = columna-1; j > -1; ++i, --j) {
+        if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna-1].get_estado() == color2) and (board[i-1][j+1].get_estado() == color2)){
+            board[fila][columna].set_estado(color);
+            for (int k = fila+1, l = columna-1; k < i; ++k, --l) {
+                board[k][l].set_estado(color);
             }
         }
-
     }
+
 }
 char Class_board::get_estado_casilla(int fila, int columna){
     return board[fila][columna].get_estado();
 }
-
+int Class_board::contador_fichas(char color){
+    int fichas;
+    for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 8; j++){
+            if (board[i][j].get_estado() = color){
+                fichas += 1;
+            }
+        }
+    }
+    return fichas;
+}
 
 
 Class_board::~Class_board() {

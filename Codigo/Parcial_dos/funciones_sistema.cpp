@@ -1,5 +1,6 @@
 #include "funciones_sistema.h"
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 int validar_opcion(int a, int b){
@@ -51,9 +52,12 @@ bool verificar_colocar_fichas(Class_board *tablerito, char color){
     bool colocar_ficha = false;
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
-            if (tablerito->atrapar_ficha(i, j, color)){
-                colocar_ficha = true;
+            if ((tablerito->get_estado_casilla(i,j) != '*') and (tablerito->get_estado_casilla(i,j) != '-')){
+                if (tablerito->atrapar_ficha(i, j, color)){
+                    colocar_ficha = true;
+                }
             }
+
 
         }
     }
@@ -90,6 +94,35 @@ void seleccion_casilla(int* filas, char* columnas, char jugador, Class_board *ta
 
     *filas = fila - 1;
     *columnas = columna - 65;
+}
+char ganador(Class_board *tablerito, char jugador1, char jugador2){
+    int ganador;
+    if (tablerito->contador_fichas(jugador1) > tablerito->contador_fichas(jugador2)){
+        ganador = jugador1;
+    }
+    else if(tablerito->contador_fichas(jugador1) < tablerito->contador_fichas(jugador2)) {
+        ganador = jugador2;
+    }
+    else{
+        ganador = 'O';
+    }
+    return ganador;
+}
+
+void guardar_data(char jugador1, char ganador, int cantidad_fichas){
+    ofstream archivo(nombreArchivo);
+
+    // Verifica si el archivo se abrió correctamente
+    if (archivo.is_open()) {
+        // Escribe la información en el archivo
+        archivo<<informacion<< endl;
+        // Cierra el archivo
+            archivo.close();
+
+        cout << "Información guardada en el archivo " << nombreArchivo << endl;
+    } else {
+        cout << "Error al abrir el archivo " << nombreArchivo << endl;
+    }
 }
 
 void menu_principal(){
@@ -138,6 +171,21 @@ void menu_principal(){
             else{
                 jugador = jugador1;
             }
+        }
+        if (ganador(&Tablero, jugador1, jugador2) == jugador1){
+            cout<<"\n----------------------------------------------------------------------------------------------\n";
+            cout<<"Felicidades el ganador es el jugador 1 con "<<Tablero.contador_fichas(jugador1)<<" fichas"<<endl;
+            cout<<"----------------------------------------------------------------------------------------------\n";
+        }
+        else if(ganador(&Tablero, jugador1, jugador2) == jugador2){
+            cout<<"\n----------------------------------------------------------------------------------------------\n";
+            cout<<"Felicidades el ganador es el jugador 2 con "<<Tablero.contador_fichas(jugador2)<<" fichas"<<endl;
+            cout<<"----------------------------------------------------------------------------------------------\n";
+        }
+        else{
+            cout<<"\n----------------------------------------------------------------------------------------------\n";
+            cout<<"Se dio un empate con una cantidad de"<<Tablero.contador_fichas(jugador2)<<" fichas"<<endl;
+            cout<<"----------------------------------------------------------------------------------------------\n";
         }
 
         menu_principal();
