@@ -49,6 +49,7 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
             board[fila][columna].set_estado('O');
             atrapar_ficha_oponente = true;
 
+
         }
     }
 
@@ -57,6 +58,7 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
         if ((board[i][columna].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna].get_estado() == color2) and (board[i-1][columna].get_estado() == color2)){
             board[fila][columna].set_estado('O');
             atrapar_ficha_oponente = true;
+
 
         }
     }
@@ -67,6 +69,7 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
             board[fila][columna].set_estado('O');
             atrapar_ficha_oponente = true;
 
+
         }
     }
     //mirar si se puede atrapar hacia la derecha
@@ -74,6 +77,7 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
         if ((board[fila][i].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila][columna+1].get_estado() == color2) and (board[fila][i-1].get_estado() == color2)){
             board[fila][columna].set_estado('O');
             atrapar_ficha_oponente = true;
+
 
         }
     }
@@ -85,6 +89,7 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
                 board[fila][columna].set_estado('O');
                 atrapar_ficha_oponente = true;
 
+
             }
     }
     //mirar diagonalmente superior derecha si se puede atrapar una ficha del oponente
@@ -94,6 +99,7 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
             if ((board[i][j].get_estado() == color) and (board[fila][columna].get_estado() != color2) and (board[fila-1][columna+1].get_estado() == color2) and (board[i+1][j-1].get_estado() == color2)){
                 board[fila][columna].set_estado('O');
                 atrapar_ficha_oponente = true;
+
 
             }
 
@@ -107,6 +113,7 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
             board[fila][columna].set_estado('O');
             atrapar_ficha_oponente = true;
 
+
         }
 
 
@@ -117,6 +124,7 @@ bool Class_board::atrapar_ficha(int fila, int columna, char color){
         if ((board[i][j].get_estado() == color) and (board[i][j].get_estado() != ' ') and (board[fila][columna].get_estado() != color2) and (board[fila+1][columna-1].get_estado() == color2) and (board[i-1][j+1].get_estado() == color2)){
             board[fila][columna].set_estado('O');
             atrapar_ficha_oponente = true;
+
         }
 
 
@@ -251,17 +259,25 @@ char Class_board::get_estado_casilla(int fila, int columna){
     return board[fila][columna].get_estado();
 }
 int Class_board::contador_fichas(char color){
-    int fichas;
+    int fichas = 0;
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
-            if (board[i][j].get_estado() = color){
-                fichas += 1;
+            if (board[i][j].get_estado() == color){
+                fichas = fichas + 1;
             }
         }
     }
     return fichas;
 }
 
+void Class_board::poner_todo_ficha(){
+    for (int var = 0; var < 8; ++var) {
+        for (int v = 0; v < 8; ++v) {
+            board[var][v].set_estado('-');
+        }
+
+    }
+}
 
 Class_board::~Class_board() {
     // Cuerpo del destructor (vacío en este caso)

@@ -1,6 +1,9 @@
 #include "funciones_sistema.h"
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
+#include <ctime>
+#include <limits>
 using namespace std;
 
 int validar_opcion(int a, int b){
@@ -72,9 +75,9 @@ void seleccion_casilla(int* filas, char* columnas, char jugador, Class_board *ta
     cout<<"MUEBEN LAS FICHAS '"<<jugador<<"'\n"<<endl;
     cout<<"Las casillas marcadas con 'O' son posiciones donde el jugador puede colocar una ficha. "<<endl;
     cout<<"\n----------------------------------------------------------------------------------------\n"<<endl;
-    cout<<"Ingrese la fila en donde quiere poner la ficha";
+    cout<<"Ingrese la fila en donde quiere poner la ficha: ";
     cin>>fila;
-    cout<<"\nE ingrese la columna en donde quiere poner la ficha";
+    cout<<"\nE ingrese la columna en donde quiere poner la ficha: ";
     cin>>columna;
     cout<<"\n----------------------------------------------------------------------------------------\n"<<endl;
 
@@ -85,9 +88,9 @@ void seleccion_casilla(int* filas, char* columnas, char jugador, Class_board *ta
         cout<<"MUEBEN LAS FICHAS '"<<jugador<<"'."<<endl;
         cout<<"Las casillas marcadas con 'O' son posiciones donde el jugador puede colocar una ficha. "<<endl;
         cout<<"\n----------------------------------------------------------------------------------------\n"<<endl;
-        cout<<"Ingrese la fila en donde quiere poner la ficha";
+        cout<<"Ingrese la fila en donde quiere poner la ficha: ";
         cin>>fila;
-        cout<<"\nE ingrese la columna en donde quiere poner la ficha";
+        cout<<"\nE ingrese la columna en donde quiere poner la ficha: ";
         cin>>columna;
         cout<<"\n----------------------------------------------------------------------------------------\n"<<endl;
     }
@@ -110,20 +113,74 @@ char ganador(Class_board *tablerito, char jugador1, char jugador2){
 }
 
 void guardar_data(char jugador1, char ganador, int cantidad_fichas){
-    ofstream archivo(nombreArchivo);
+    ofstream archivo;
+    char nombre1[100];
+    char nombre2[100];
+    char jugador2;
+    time_t tiempoActual;
+    struct tm* tiempoInfo;
+    char buffer[80];
 
-    // Verifica si el archivo se abrió correctamente
-    if (archivo.is_open()) {
-        // Escribe la información en el archivo
-        archivo<<informacion<< endl;
-        // Cierra el archivo
-            archivo.close();
+    time(&tiempoActual); // Obtiene el tiempo actual
+    tiempoInfo = localtime(&tiempoActual); // Convierte a estructura tm
 
-        cout << "Información guardada en el archivo " << nombreArchivo << endl;
-    } else {
-        cout << "Error al abrir el archivo " << nombreArchivo << endl;
+    // Formatea y muestra la fecha y hora
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", tiempoInfo);
+
+
+    cout<<"\nIngresar nombre del jugador 1: ";
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    cin.getline(nombre1, 100);
+    cout<<"Ingresar nombre del jugador 2: ";
+    cin.getline(nombre2, 100);
+    cout<<endl;
+
+    if ('*' == jugador1){
+        jugador2 = '-';
     }
+    else{
+        jugador2 = '*';
+    }
+
+    archivo.open("C:\\Users\\DAVIN CHAVARRIA\\Downloads\\data.txt",ios::app);
+
+    if(archivo.fail()){
+        cout<<"No se pudo guardar la informacion";
+        exit(1);
+    }
+
+    if (ganador == jugador1){
+        archivo<<"El "<<buffer<<" el ganador fue "<<nombre1<<" con un total de fichas de "<<cantidad_fichas<<" en contra del jugador "<<nombre2<<"\n";
+    }
+    else if (ganador == jugador2){
+        archivo<<"El "<<buffer<<" el ganador fue "<<nombre2<<" con un total de fichas de "<<cantidad_fichas<<" en contra del jugador "<<nombre1<<"\n";
+    }
+    else{
+        archivo<<"El "<<buffer<<" se dio un empate entre "<<nombre1<<" y "<<nombre2<<"\n";
+    }
+
+    archivo.close();
 }
+
+void Imprimir_data(){
+    ifstream archivo;
+    char linea[292];
+
+    archivo.open("C:\\Users\\DAVIN CHAVARRIA\\Downloads\\data.txt",ios::in);//Abrimos el archivo en modo de lectura
+
+    if (archivo.fail()){//si ocurre algun error al tratar de abrir el archivo
+        cout<<"No se pudo abrir el archivo"<<endl;
+        exit(1);//salimos de la funcion
+    }
+
+
+    while(!archivo.eof()){//mientras que  no sea el final del archivo
+        archivo.getline(linea,292);//obtenemos el contenido de las lineas del archivo
+        cout<< linea<<"\n";//almacenamos las lineas para no perder informacion
+    }
+    cout<<endl;
+}
+
 
 void menu_principal(){
     Class_board Tablero;
@@ -141,6 +198,8 @@ void menu_principal(){
 
         seleccion_fichas(&jugador1, &jugador2);
         char jugador = jugador1;
+
+
         while((verificar_colocar_fichas(&Tablero, jugador1) or verificar_colocar_fichas(&Tablero, jugador2)) or !Tablero.tablero_lleno()){
             int fila;
             char columna;
@@ -188,19 +247,23 @@ void menu_principal(){
             cout<<"----------------------------------------------------------------------------------------------\n";
         }
 
+        guardar_data(jugador1, ganador(&Tablero, jugador1, jugador2), Tablero.contador_fichas(ganador(&Tablero, jugador1, jugador2)));
+
         menu_principal();
 
     }
     else if(opcion == 2){
-        cout<<"ahorita no se puede usar\n";
+        cout<<"\n---------------------------------------\n";
+        cout<<"            PARTIDAS ANTERIORES\n";
+        cout<<"---------------------------------------\n";
+        Imprimir_data();
         menu_principal();
 
     }
     else {
-        cout<<"-------------------------------\n";
-        cout<<"   HAZ FINALIZADO EL PROGRA    \n";
-        cout<<"      TE ESPERAMOS PRONTO      \n";
-        cout<<"-------------------------------\n";
+        cout<<"------------------------------------------\n";
+        cout<<"HAZ FINALIZADO EL PROGRA    \n";
+        cout<<"------------------------------------------\n";
 
     }
 }
