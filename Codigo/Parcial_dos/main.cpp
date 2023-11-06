@@ -1,13 +1,13 @@
 #include <iostream>
 #include "class_board.h"
+#include "funciones_sistema.h"
 
 using namespace std;
 
 int main()
 {
-    Class_board uno, dos;
-    uno.poner_ficha(1,2,'-');
-    uno.imprimir_tablero();
-    dos.imprimir_tablero();
+    menu_principal();
+
+
     return 0;
 }

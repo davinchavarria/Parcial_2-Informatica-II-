@@ -10,13 +10,13 @@ public:
     Class_board();
     void poner_ficha(int fila, int columna, char color);
     void imprimir_tablero();
+    bool tablero_lleno();
     bool atrapar_ficha(int fila, int columna, char color);
-
-
+    void atrapar_ficha_cambio(int fila, int columna, char color);
+    void eliminar_O();
+    char get_estado_casilla(int fila, int columna);
 
     ~Class_board();
-
-
 };
 
 #endif // CLASS_BOARD_H
